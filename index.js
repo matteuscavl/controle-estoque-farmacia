@@ -34,7 +34,7 @@ app.use('/', estoquistaController);
 app.use('/', produtoController);
 
 app.get('/', (req, res) => {
-    res.send('Rota Inicial');
+    res.render('index');
 })
 
 app.listen(port, error => {
