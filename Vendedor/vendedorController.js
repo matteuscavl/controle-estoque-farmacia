@@ -19,7 +19,7 @@ router.post('/vendedor/auth', (req, res) => {
         }
     }).then(usuarios => {
         if(usuarios) {
-            res.send('Usuario Encontrado')
+            res.render('Vendedor/vendedor');
         } else {
             res.send('Usuario Não Encontrado')
         }
@@ -41,6 +41,10 @@ router.post('/vendedor/create/auth', (req, res) => {
         password: password
     }).then(() => console.log('Usuario Cadastrado'))
     .catch((error) => console.log(error))
+})
+
+router.get('/vendedor/vendaForm', (req, res) => {
+    res.render('Vendedor/vendaForm');
 })
 
 module.exports = router;
