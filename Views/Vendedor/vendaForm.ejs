@@ -1,8 +1,30 @@
 <%- include('../Partials/head.ejs') %>
     <div class="container">
-        <form>
-            <input type="text" name="produto" placeholder="Digite o nome do Produto" class="form-controll">
-            <button type="submit" class="btn btn-success"> Vender !</button>
+        <form class="venda">
+            <input type="text" name="produto" placeholder="Digite o nome do Produto" class="form-control">
         </form>
+        <button class="btn btn-success novoProduto">Novo Produto</button>
     </div>
 <%- include('../Partials/footer.ejs') %>
+
+<script>
+    // Gerando novos Inputs de cadastro de Produtos
+
+    // const newProduto = $('.novoProduto')
+    // const formVenda = $('.venda');
+
+    // const renderNewProduto = () => {
+    //     const newInput = $('<input>');
+
+    //     newInput.attr({
+    //         'type': 'text',
+    //         'name': 'produto',
+    //         'placeholder': 'Digite o nome do produto'
+    //     })
+    //     newInput.addClass('form-control m-3');
+
+    //     formVenda.append(newInput);
+    // }
+
+    // newProduto.click(renderNewProduto);
+</script>
