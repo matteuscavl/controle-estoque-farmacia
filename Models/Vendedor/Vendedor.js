@@ -8,7 +8,7 @@ const Vendedor = connection.define('vendedor', {
     },
 
     email: {
-        type: Sequelize.STRING, 
+        type: Sequelize.STRING,
         allowNull: false,
     },
 
