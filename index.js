@@ -31,7 +31,7 @@ app.use('/', vendedorController);
 
 // Rotas
 app.get('/', (req, res) => {
-    res.send('Tela Inicial do Novo update');
+    res.render('index');
 })
 
 app.listen(port, error => {

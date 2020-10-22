@@ -13,5 +13,5 @@ const Cliente = connection.define('cliente', {
     }
 })
 
-Cliente.sync({fore: true});
+// Cliente.sync({fore: true});
 module.exports = Cliente;

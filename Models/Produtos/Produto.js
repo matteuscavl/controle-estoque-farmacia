@@ -18,5 +18,5 @@ const Produto = connection.define('produto', {
     }
 })
 
-Produto.sync({force: true});
+// Produto.sync({force: true});
 module.exports = Produto;

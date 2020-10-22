@@ -18,5 +18,5 @@ const Vendedor = connection.define('vendedor', {
     }
 })
 
-Vendedor.sync({force: true});
+// Vendedor.sync({force: true});
 module.exports = Vendedor;
