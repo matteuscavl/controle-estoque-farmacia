@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/produto', (req, res) => {
-    res.send('Testando Rota de Produtos')
+
+router.get('/vendedor', (req, res) => {
+    res.send('Rota de Vendedor');
 })
 
 module.exports = router;

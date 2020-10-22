@@ -1,42 +1,39 @@
-// Inicio Configurações Iniciais do Servidor
+// ...
 const express = require('express');
 const bodyParser = require('body-parser');
+const connection = require('./database/database')
 const app = express();
 const port = 8080;
-const connection = require('./database/database');
 
-// Configurando Body Parser para tratar requisições de Formulário
+// ...
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// Configurando o Template Engine e Arquivos Estáticos
+// ...
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
-// Importando as tabelas do Banco de Dados
-const Vendedor = require('./Vendedor/vendedor');
-const Estoquista = require('./Estoquista/estoquista');
-const Produto = require('./Produto/produto');
+//...
+const Cliente = require('./Models/Clientes/Cliente');
+const Vendedor = require('./Models/Vendedor/Vendedor');
+const Produto = require('./Models/Produtos/Produto');
 
-// Instanciando as Rotas
-const vendedorController = require('./Vendedor/vendedorController');
-const estoquistaController = require('./Estoquista/estoquistaController');
-const produtoController = require('./Produto/produtoController');
+// ...
+const vendedorController = require('./Models/Vendedor/vendedorController');
 
-// Configurando a autenticação com o Banco de Dados
+// ...
 connection.authenticate()
-    .then(() => console.log('Conexão com Banco de Dados estabelecida'))
-    .catch((error) => 'Error' + error);
+    .then(() => console.log('Conexão com Banco de Dados Estabelecida'))
+    .catch((err) => console.log('Falha' + err))
 
 // Rotas
 app.use('/', vendedorController);
-app.use('/', estoquistaController);
-app.use('/', produtoController);
 
+// Rotas
 app.get('/', (req, res) => {
-    res.render('index');
+    res.send('Tela Inicial do Novo update');
 })
 
 app.listen(port, error => {
-    console.log('Servidor rodando na porta', port);
+    console.log('Servidor Rodando');
 })
