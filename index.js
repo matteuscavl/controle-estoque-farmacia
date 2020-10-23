@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const connection = require('./database/database')
+const session = require('express-session');
 const app = express();
 const port = 8080;
 
@@ -12,6 +13,14 @@ app.use(bodyParser.json());
 // ...
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+// ...
+app.use(session({
+    secret: 'validandologinscomsession',
+    cookie: {
+        maxAge: 30000000
+    }
+}))
 
 //...
 const Cliente = require('./Models/Clientes/Cliente');

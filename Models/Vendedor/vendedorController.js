@@ -1,5 +1,7 @@
 const express = require('express');
 const Vendedor = require('./Vendedor');
+const Produto = require('../Produtos/Produto');
+const vendedorAuth = require('../../middlewares/vendedorauth');
 const router = express.Router();
 
 
@@ -52,6 +54,22 @@ router.post('/autenticarVendedor', (req, res) => {
             res.redirect('/');
         }
     })
+})
+
+router.get('/cadastrarProduto', (req, res) => {
+    res.render('Produto/cadastrarProduto');
+})
+
+router.post('/newProduto', (req, res) => {
+    const nomeProduto = req.body.nomeProduto;
+    const precoProduto = parseFloat(req.body.precoProduto).toFixed(2);
+    const quantidade = req.body.quantidade;
+
+    Produto.create({
+        nomeProduto: nomeProduto,
+        preco: precoProduto,
+        quantidade: quantidade
+    }).then(() => console.log('Tabela Criada')).catch((error) => console.log('Falha' + error));
 })
 
 module.exports = router;
