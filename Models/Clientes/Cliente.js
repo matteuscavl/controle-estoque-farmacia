@@ -10,8 +10,12 @@ const Cliente = connection.define('cliente', {
     telefone: {
         type: Sequelize.STRING,
         allowNull: false, 
+    },
+    total: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
     }
 })
 
-// Cliente.sync({fore: true});
+// Cliente.sync({force: true});
 module.exports = Cliente;

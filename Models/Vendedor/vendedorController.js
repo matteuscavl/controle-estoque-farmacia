@@ -97,40 +97,61 @@ router.post('/venda', (req, res) => {
     const quantidadePedido = req.body.quantidade;
     const nomeCliente = req.body.nomeCliente;
     const telefoneCliente = req.body.telefoneCliente;
+    let preco = 0;
+    let total = 0;
 
     Cliente.findOne({
         where: {
             nomeCliente: nomeCliente,
-            telefone: telefoneCliente 
+            telefone: telefoneCliente
         }
     }).then((cliente) => {
         if (cliente) {
-            Produto.findByPk(pedido).then((produto) => {
-                if (produto.quantidade >= quantidadePedido) {
-                    Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
-                        where: {
-                            id: pedido
-                        }
-                    }).then(() => res.redirect('Vendedor/realizarVenda'))
-                } else {
-                    res.send('Não há produtos no estoque');
-                }
-            })
+            // Cliente Existir
+            Produto.findByPk(pedido)
+                .then((produto) => {
+                    if (produto.quantidade >= quantidadePedido) {
+                        preco = produto.preco*quantidadePedido
+                        Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
+                            where: {
+                                id: pedido
+                            }
+                        }).then(() => Cliente.findOne({
+                            where: {
+                                nomeCliente: nomeCliente,
+                                telefone: telefoneCliente,
+                            }
+                        })).then((cliente) => {
+                            total = cliente.total
+                            total += preco
+
+                            Cliente.update({total: total}, {
+                                where: {
+                                    nomeCliente: nomeCliente,
+                                    telefone: telefoneCliente
+                                }
+                            }).then()
+                        })
+                    } else {
+                        // Produto em falta no estoque
+                    }
+                })
+
         } else {
-            Cliente.create({
-                nomeCliente: nomeCliente,
-                telefone: telefoneCliente
-            }).then(Produto.findByPk(pedido).then((produto) => {
-                if (produto.quantidade >= quantidadePedido) {
-                    Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
-                        where: {
-                            id: pedido
-                        }
-                    }).then(() => res.redirect('Vendedor/realizarVenda'))
-                } else {
-                    res.send('Não há produto disponivel no estoque');
-                }
-            }))
+            // Cliente não existir
+            Produto.findByPk(pedido)
+                .then((produto) => {
+                    if (produto.quantidade >= quantidadePedido) {
+                        preco = produto.preco * quantidadePedido;
+                        total += preco
+
+                        Cliente.create({
+                            nomeCliente: nomeCliente,
+                            telefone: telefoneCliente,
+                            total: total
+                        }).then(() => console.log('Cliente cadastrado'))
+                    }
+                })
         }
     })
 })
