@@ -1,6 +1,7 @@
 const express = require('express');
 const Vendedor = require('./Vendedor');
 const Produto = require('../Produtos/Produto');
+const Cliente = require('../Clientes/Cliente');
 const vendedorAuth = require('../../middlewares/vendedorauth');
 const router = express.Router();
 
@@ -70,6 +71,51 @@ router.post('/newProduto', (req, res) => {
         preco: precoProduto,
         quantidade: quantidade
     }).then(() => console.log('Tabela Criada')).catch((error) => console.log('Falha' + error));
+})
+
+router.get('/realizarVenda', (req, res) => {
+    Produto.findAll().then((produtos) => {
+        res.render('Vendedor/realizarVenda', {produtos: produtos});
+    })
+})
+
+router.post('/venda', (req, res) => {
+    const pedido = req.body.produtos;
+    const quantidadePedido = req.body.quantidade;
+    const nomeCliente = req.body.nomeCliente;
+    const telefoneCliente = req.body.telefoneCliente;
+
+    Cliente.findOne({
+        where: {
+            nomeCliente: nomeCliente,
+            telefone: telefoneCliente 
+        }
+    }).then((cliente) => {
+        if (cliente) {
+            Produto.findByPk(pedido).then((produto) => {
+                if (produto.quantidade >= quantidadePedido) {
+                    Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
+                        where: {
+                            id: pedido
+                        }
+                    }).then(() => res.redirect('Vendedor/realizarVenda'))
+                }
+            })
+        } else {
+            Cliente.create({
+                nomeCliente: nomeCliente,
+                telefone: telefoneCliente
+            }).then(Produto.findByPk(pedido).then((produto) => {
+                if (produto.quantidade >= quantidadePedido) {
+                    Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
+                        where: {
+                            id: pedido
+                        }
+                    }).then(() => res.redirect('Vendedor/realizarVenda'))
+                }
+            }))
+        }
+    })
 })
 
 module.exports = router;
