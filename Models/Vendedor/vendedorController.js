@@ -135,4 +135,10 @@ router.post('/venda', (req, res) => {
     })
 })
 
+router.get('/visualizarProdutos', (req, res) => {
+    Produto.findAll().then((produtos) => {
+        res.render('Produto/produtoList', {produtos: produtos});
+    })
+})
+
 module.exports = router;
