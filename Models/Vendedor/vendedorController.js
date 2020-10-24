@@ -66,11 +66,24 @@ router.post('/newProduto', (req, res) => {
     const precoProduto = parseFloat(req.body.precoProduto).toFixed(2);
     const quantidade = req.body.quantidade;
 
-    Produto.create({
-        nomeProduto: nomeProduto,
-        preco: precoProduto,
-        quantidade: quantidade
-    }).then(() => console.log('Tabela Criada')).catch((error) => console.log('Falha' + error));
+    Produto.findOne({
+        where: {
+            nomeProduto: nomeProduto,
+        }
+    }).then((produto) => {
+        if (produto) {
+            Produto.findAll().then(produtos => {
+                res.render('Produto/produtoList', {produtos: produto})
+            })
+        } else {
+            Produto.create({
+                nomeProduto: nomeProduto,
+                preco: precoProduto,
+                quantidade: quantidade
+            }).then(() => res.render('Vendedor/sessaoVendedor'))
+            .catch((error) => console.log('Falha' + error));
+        }
+    })
 })
 
 router.get('/realizarVenda', (req, res) => {
@@ -99,6 +112,8 @@ router.post('/venda', (req, res) => {
                             id: pedido
                         }
                     }).then(() => res.redirect('Vendedor/realizarVenda'))
+                } else {
+                    res.send('Não há produtos no estoque');
                 }
             })
         } else {
@@ -112,6 +127,8 @@ router.post('/venda', (req, res) => {
                             id: pedido
                         }
                     }).then(() => res.redirect('Vendedor/realizarVenda'))
+                } else {
+                    res.send('Não há produto disponivel no estoque');
                 }
             }))
         }
