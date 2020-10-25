@@ -135,7 +135,7 @@ router.post('/venda', (req, res) => {
                             }).then() // Renderizar nova pagina de valor Total
                         })
                     } else {
-                        // Produto em falta no estoque
+                        res.render('/Produto/produtoList')
                     }
                 })
 
@@ -165,22 +165,27 @@ router.get('/visualizarProdutos', (req, res) => {
 })
 
 router.get('/finalizarVenda', (req, res) => {
-    // Você parou aqui...
-    // Resolver a lógica para gerar o valor na pagina Final
+    Cliente.findAll()
+    .then((clientes) => {
+        res.render('Cliente/paginaFinal', {clientes: clientes});
+    })
 })
 
-router.post('/finalizarVendaAtualizarDados', (req, res) => {
-    const nomeCliente = req.body.nome;
-    const telefoneCliente = req.body.telefone;
-    const totalApagar = req.body.total;
+router.post('/receberPagamento', (req, res) => {
+    const id = req.body.id
 
-    Cliente.update({total: 0}, {
-        where: {
-            nomeCliente: nomeCliente,
-            telefone: telefoneCliente,
-            total: totalApagar
-        }
-    }).then(() => console.log('Resolvido'));
+    Cliente.findByPk(id)
+    .then((cliente) => {
+        Cliente.update({total: 0}, {
+            where: {
+                id: cliente.id
+            }
+        }).then(() => {
+            Produto.findAll().then((produtos) => {
+                res.render('Vendedor/realizarVenda', {produtos: produtos});
+            })
+        })
+    })
 })
 
 module.exports = router;

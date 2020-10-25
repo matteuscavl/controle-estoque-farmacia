@@ -1,13 +1,36 @@
 <%- include('../Partials/header.ejs') %>
-<form action="/finalizarVendaAtualizarDados" method="POST">
-    <% cliente.forEach((cliente) => { %>
-        <h2>Nome Cliente:</h2>
-        <input type="text" value="<%= cliente.nomeCliente %>" name="nome" readonly><br>
-        <h2>Telefone:</h2>
-        <input type="text" value="<%= cliente.telefone %>" name="telefone" readonly><br>
-        <h2>Total a pagar:</h2>
-        <input type="text" value="<%= cliente.total %>" name="total" readonly><br>
-    <% }) %>
-    <button class="btn btn-primary">Finalizar Compra</button>
-</form>
+<nav class="navbar navbard-expand-lg navbark-dark bg-primary">
+    <h1 class="text-center">Clientes</h1>
+</nav>    
+    <div class="container mt-3">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID: </th>
+                    <th>Nome Cliente</th>
+                    <th>Telefone Cliente</th>
+                    <th>Total a pagar</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% clientes.forEach((clientes) => { %>
+                    <% if (clientes.total > 1) { %> 
+                        <tr>
+                            <th> <%= clientes.id %> </th>
+                            <th> <%= clientes.nomeCliente %></th>
+                            <th> <%= clientes.telefone %> </th>
+                            <th> R$ <%= clientes.total %> </th>
+                            <th>
+                                <form action="/receberPagamento" method="POST">
+                                    <input type="hidden" name="id" value="<%= clientes.id %>">
+                                    <button class="btn btn-primary"> Receber Pagamento </button>
+                                </form>
+                            </th>
+                        </tr>
+                    <% } %>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
 <%- include('../Partials/footer.ejs') %>
