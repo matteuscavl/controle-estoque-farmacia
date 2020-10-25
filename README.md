@@ -27,7 +27,7 @@
 <hr>
 
 #### 📃 Documentação 
-#### Você pode encontrar a documentação desse projeto para download ou leitura online clicando [Aqui - Documentação](https://drive.google.com/file/d/1HK6jt6qMUvBU-iNL66MhUuGzbU60CznM/view): versão 001.10/2020
+#### Você pode encontrar a documentação desse projeto para download ou leitura online clicando [Aqui - Documentação Versão 001.10/2020](https://drive.google.com/file/d/1HK6jt6qMUvBU-iNL66MhUuGzbU60CznM/view)
 
 <hr>
 
@@ -38,3 +38,11 @@
 > npm i
 
 #### Para que ele possa instalar todas as depedências que se encontram no package.json
+
+<hr>
+
+#### Para que esse projeto funcione perfeitamente no seu computador é necessário que você tenha instalado o MySQL Workbench
+
+#### É importante que você crie um novo banco de dados com o seguinte nome 'estoquefarmacia' (sem as aspas) e você deve alterar as informações no arquivo 'database.js' que se encontra dentro da pasta database. 
+
+#### Nesse arquivo você deve realizar as alterações da senha para a sua senha.
