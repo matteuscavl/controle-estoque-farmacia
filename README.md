@@ -16,8 +16,10 @@
 
 #### 🚀 Techs: 
 
+- EJS
 - NodeJS
 - Express
+- Express-session
 - Sequelize
 - MySQL
 - Bootstrap
@@ -25,7 +27,7 @@
 <hr>
 
 #### 📃 Documentação 
-#### Você pode encontrar a documentação desse projeto para download ou leitura online clicando aqui
+#### Você pode encontrar a documentação desse projeto para download ou leitura online clicando [Aqui - Documentação](https://drive.google.com/file/d/1HK6jt6qMUvBU-iNL66MhUuGzbU60CznM/view): versão 001.10/2020
 
 <hr>
 
