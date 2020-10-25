@@ -80,7 +80,9 @@ router.post('/newProduto', (req, res) => {
                 nomeProduto: nomeProduto,
                 preco: precoProduto,
                 quantidade: quantidade
-            }).then(() => res.render('Vendedor/sessaoVendedor'))
+            }).then(() => Produto.findAll().then((produtos) => {
+                res.render('Produto/produtoList', {produtos: produtos})
+            }))
             .catch((error) => console.log('Falha' + error));
         }
     })
@@ -130,7 +132,7 @@ router.post('/venda', (req, res) => {
                                     nomeCliente: nomeCliente,
                                     telefone: telefoneCliente
                                 }
-                            }).then()
+                            }).then() // Renderizar nova pagina de valor Total
                         })
                     } else {
                         // Produto em falta no estoque
@@ -160,6 +162,25 @@ router.get('/visualizarProdutos', (req, res) => {
     Produto.findAll().then((produtos) => {
         res.render('Produto/produtoList', {produtos: produtos});
     })
+})
+
+router.get('/finalizarVenda', (req, res) => {
+    // Você parou aqui...
+    // Resolver a lógica para gerar o valor na pagina Final
+})
+
+router.post('/finalizarVendaAtualizarDados', (req, res) => {
+    const nomeCliente = req.body.nome;
+    const telefoneCliente = req.body.telefone;
+    const totalApagar = req.body.total;
+
+    Cliente.update({total: 0}, {
+        where: {
+            nomeCliente: nomeCliente,
+            telefone: telefoneCliente,
+            total: totalApagar
+        }
+    }).then(() => console.log('Resolvido'));
 })
 
 module.exports = router;

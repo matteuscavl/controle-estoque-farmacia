@@ -1,0 +1,13 @@
+<%- include('../Partials/header.ejs') %>
+<form action="/finalizarVendaAtualizarDados" method="POST">
+    <% cliente.forEach((cliente) => { %>
+        <h2>Nome Cliente:</h2>
+        <input type="text" value="<%= cliente.nomeCliente %>" name="nome" readonly><br>
+        <h2>Telefone:</h2>
+        <input type="text" value="<%= cliente.telefone %>" name="telefone" readonly><br>
+        <h2>Total a pagar:</h2>
+        <input type="text" value="<%= cliente.total %>" name="total" readonly><br>
+    <% }) %>
+    <button class="btn btn-primary">Finalizar Compra</button>
+</form>
+<%- include('../Partials/footer.ejs') %>
