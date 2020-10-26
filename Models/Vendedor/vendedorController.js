@@ -132,7 +132,11 @@ router.post('/venda', (req, res) => {
                                     nomeCliente: nomeCliente,
                                     telefone: telefoneCliente
                                 }
-                            }).then() // Renderizar nova pagina de valor Total
+                            }).then(() => {
+                                Cliente.findAll().then((clientes) => {
+                                    res.render('Cliente/paginaFinal', {clientes: clientes});
+                                })
+                            })
                         })
                     } else {
                         res.render('/Produto/produtoList')
@@ -151,10 +155,21 @@ router.post('/venda', (req, res) => {
                             nomeCliente: nomeCliente,
                             telefone: telefoneCliente,
                             total: total
-                        }).then(() => console.log('Cliente cadastrado'))
+                        }).then(() => Cliente.findAll().then((clientes) => {
+                            res.render('Cliente/paginaFinal', {clientes: clientes});
+                        }))
                     }
                 })
         }
+    })
+})
+
+router.post('/atualizarPedido', (req, res) => {
+    const id = req.body.id;
+    Cliente.findByPk(id)
+    .then((cliente) => {
+        Produto.findAll()
+        .then((produtos) => res.render('Vendedor/atualizarPedido', {cliente: cliente, produtos: produtos}))
     })
 })
 
@@ -181,9 +196,7 @@ router.post('/receberPagamento', (req, res) => {
                 id: cliente.id
             }
         }).then(() => {
-            Produto.findAll().then((produtos) => {
-                res.render('Vendedor/realizarVenda', {produtos: produtos});
-            })
+            res.render('Vendedor/sessaoVendedor');
         })
     })
 })

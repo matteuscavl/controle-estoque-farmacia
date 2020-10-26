@@ -17,16 +17,20 @@
                 <% clientes.forEach((clientes) => { %>
                     <% if (clientes.total > 1) { %> 
                         <tr>
-                            <th> <%= clientes.id %> </th>
-                            <th> <%= clientes.nomeCliente %></th>
-                            <th> <%= clientes.telefone %> </th>
-                            <th> R$ <%= clientes.total %> </th>
-                            <th>
-                                <form action="/receberPagamento" method="POST">
+                            <td> <%= clientes.id %> </td>
+                            <td> <%= clientes.nomeCliente %></td>
+                            <td> <%= clientes.telefone %> </td>
+                            <td> R$ <%= clientes.total %> </td>
+                            <td>
+                                <form action="/receberPagamento" method="POST" style="display: inline">
                                     <input type="hidden" name="id" value="<%= clientes.id %>">
                                     <button class="btn btn-primary"> Receber Pagamento </button>
                                 </form>
-                            </th>
+                                <form action="/atualizarPedido" method="POST" style="display: inline">
+                                    <input type="hidden" name="id" value="<%= clientes.id %>">
+                                    <button class="btn btn-success"> Atualizar Carrinho </button>
+                                </form>
+                            </td>
                         </tr>
                     <% } %>
                 <% }) %>
