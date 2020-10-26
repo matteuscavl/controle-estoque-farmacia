@@ -19,22 +19,27 @@ router.post('/concluirCadastro', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    Vendedor.findOne({
-        where: {
-            email: email, 
-            password: password,
-        }
-    }).then((vendedores) => {
-        if (vendedores) {
-            res.send('Usuario Existente')
-        } else {
-            Vendedor.create({
-                nome: nome,
+    if (nome, email, password) {
+        Vendedor.findOne({
+            where: {
                 email: email, 
-                password: password
-            }).then(() => console.log('Usuario Cadastrado')).catch((err) => console.log('N criado' + err))
-        }
-    })
+                password: password,
+            }
+        }).then((vendedores) => {
+            if (vendedores) {
+                res.send('Usuario Existente')
+            } else {
+                Vendedor.create({
+                    nome: nome,
+                    email: email, 
+                    password: password
+                }).then(() => res.render('Vendedor/loginVendedor'))
+                .catch((err) => res.render('/'))
+            }
+        })
+    } else {
+        res.redirect('/')
+    }
 })
 
 router.post('/autenticarVendedor', (req, res) => {
@@ -66,26 +71,30 @@ router.post('/newProduto', (req, res) => {
     const precoProduto = parseFloat(req.body.precoProduto).toFixed(2);
     const quantidade = req.body.quantidade;
 
-    Produto.findOne({
-        where: {
-            nomeProduto: nomeProduto,
-        }
-    }).then((produto) => {
-        if (produto) {
-            Produto.findAll().then(produtos => {
-                res.render('Produto/produtoList', {produtos: produto})
-            })
-        } else {
-            Produto.create({
+    if (nomeProduto, precoProduto, quantidade) {
+        Produto.findOne({
+            where: {
                 nomeProduto: nomeProduto,
-                preco: precoProduto,
-                quantidade: quantidade
-            }).then(() => Produto.findAll().then((produtos) => {
-                res.render('Produto/produtoList', {produtos: produtos})
-            }))
-            .catch((error) => console.log('Falha' + error));
-        }
-    })
+            }
+        }).then((produto) => {
+            if (produto) {
+                Produto.findAll().then(produtos => {
+                    res.render('Produto/produtoList', {produtos: produto})
+                })
+            } else {
+                Produto.create({
+                    nomeProduto: nomeProduto,
+                    preco: precoProduto,
+                    quantidade: quantidade
+                }).then(() => Produto.findAll().then((produtos) => {
+                    res.render('Produto/produtoList', {produtos: produtos})
+                }))
+                .catch((error) => console.log('Falha' + error));
+            }
+        })
+    } else {
+        res.render('Produto/cadastrarProduto')
+    }
 })
 
 router.get('/realizarVenda', (req, res) => {
@@ -102,66 +111,70 @@ router.post('/venda', (req, res) => {
     let preco = 0;
     let total = 0;
 
-    Cliente.findOne({
-        where: {
-            nomeCliente: nomeCliente,
-            telefone: telefoneCliente
-        }
-    }).then((cliente) => {
-        if (cliente) {
-            // Cliente Existir
-            Produto.findByPk(pedido)
-                .then((produto) => {
-                    if (produto.quantidade >= quantidadePedido) {
-                        preco = produto.preco*quantidadePedido
-                        Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
-                            where: {
-                                id: pedido
-                            }
-                        }).then(() => Cliente.findOne({
-                            where: {
-                                nomeCliente: nomeCliente,
-                                telefone: telefoneCliente,
-                            }
-                        })).then((cliente) => {
-                            total = cliente.total
-                            total += preco
-
-                            Cliente.update({total: total}, {
+    if (nomeCliente, telefoneCliente) {
+        Cliente.findOne({
+            where: {
+                nomeCliente: nomeCliente,
+                telefone: telefoneCliente
+            }
+        }).then((cliente) => {
+            if (cliente) {
+                // Cliente Existir
+                Produto.findByPk(pedido)
+                    .then((produto) => {
+                        if (produto.quantidade >= quantidadePedido) {
+                            preco = produto.preco*quantidadePedido
+                            Produto.update({quantidade: produto.quantidade - quantidadePedido}, {
+                                where: {
+                                    id: pedido
+                                }
+                            }).then(() => Cliente.findOne({
                                 where: {
                                     nomeCliente: nomeCliente,
-                                    telefone: telefoneCliente
+                                    telefone: telefoneCliente,
                                 }
-                            }).then(() => {
-                                Cliente.findAll().then((clientes) => {
-                                    res.render('Cliente/paginaFinal', {clientes: clientes});
+                            })).then((cliente) => {
+                                total = cliente.total
+                                total += preco
+    
+                                Cliente.update({total: total}, {
+                                    where: {
+                                        nomeCliente: nomeCliente,
+                                        telefone: telefoneCliente
+                                    }
+                                }).then(() => {
+                                    Cliente.findAll().then((clientes) => {
+                                        res.render('Cliente/paginaFinal', {clientes: clientes});
+                                    })
                                 })
                             })
-                        })
-                    } else {
-                        res.render('/Produto/produtoList')
-                    }
-                })
-
-        } else {
-            // Cliente não existir
-            Produto.findByPk(pedido)
-                .then((produto) => {
-                    if (produto.quantidade >= quantidadePedido) {
-                        preco = produto.preco * quantidadePedido;
-                        total += preco
-
-                        Cliente.create({
-                            nomeCliente: nomeCliente,
-                            telefone: telefoneCliente,
-                            total: total
-                        }).then(() => Cliente.findAll().then((clientes) => {
-                            res.render('Cliente/paginaFinal', {clientes: clientes});
-                        }))
-                    }
-                })
-        }
-    })
+                        } else {
+                            res.render('/Produto/produtoList')
+                        }
+                    })
+    
+            } else {
+                // Cliente não existir
+                Produto.findByPk(pedido)
+                    .then((produto) => {
+                        if (produto.quantidade >= quantidadePedido) {
+                            preco = produto.preco * quantidadePedido;
+                            total += preco
+    
+                            Cliente.create({
+                                nomeCliente: nomeCliente,
+                                telefone: telefoneCliente,
+                                total: total
+                            }).then(() => Cliente.findAll().then((clientes) => {
+                                res.render('Cliente/paginaFinal', {clientes: clientes});
+                            }))
+                        }
+                    })
+            }
+        })
+    } else {
+        res.render('Vendedor/sessaoVendedor');
+    }
 })
 
 router.post('/atualizarPedido', (req, res) => {

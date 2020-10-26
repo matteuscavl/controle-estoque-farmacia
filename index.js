@@ -18,7 +18,7 @@ app.use(express.static('public'));
 app.use(session({
     secret: 'validandologinscomsession',
     cookie: {
-        maxAge: 30000000
+        maxAge: 3000000000000
     }
 }))
 
