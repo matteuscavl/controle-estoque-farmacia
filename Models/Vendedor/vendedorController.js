@@ -55,6 +55,10 @@ router.post('/autenticarVendedor', (req, res) => {
         }
     }).then((usuario) => {
         if (usuario) {
+            req.session.user = {
+                nome: nome,
+                password: password
+            }
             res.render('Vendedor/sessaoVendedor')
         } else {
             res.redirect('/');
@@ -62,7 +66,7 @@ router.post('/autenticarVendedor', (req, res) => {
     })
 })
 
-router.get('/cadastrarProduto', (req, res) => {
+router.get('/cadastrarProduto', vendedorAuth, (req, res) => {
     res.render('Produto/cadastrarProduto');
 })
 
@@ -97,7 +101,7 @@ router.post('/newProduto', (req, res) => {
     }
 })
 
-router.get('/realizarVenda', (req, res) => {
+router.get('/realizarVenda', vendedorAuth,(req, res) => {
     Produto.findAll().then((produtos) => {
         res.render('Vendedor/realizarVenda', {produtos: produtos});
     })
@@ -186,7 +190,7 @@ router.post('/atualizarPedido', (req, res) => {
     })
 })
 
-router.get('/visualizarProdutos', (req, res) => {
+router.get('/visualizarProdutos', vendedorAuth, (req, res) => {
     Produto.findAll().then((produtos) => {
         res.render('Produto/produtoList', {produtos: produtos});
     })
@@ -212,6 +216,11 @@ router.post('/receberPagamento', (req, res) => {
             res.render('Vendedor/sessaoVendedor');
         })
     })
+})
+
+router.get('/logout', (req, res) => {
+    req.session.user = undefined
+    res.redirect('/');
 })
 
 module.exports = router;
